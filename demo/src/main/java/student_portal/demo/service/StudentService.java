@@ -1,10 +1,9 @@
 package student_portal.demo.service;
 
-import java.util.Random;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+
 import org.springframework.stereotype.Service;
 
 import student_portal.demo.entity.Student;
@@ -29,8 +28,7 @@ public class StudentService {
         student.setUserId(userId);
 
         Student savedStudent = studentRepo.save(student);
-
-//        sendUserIdMail(savedStudent.getEmail(), savedStudent.getUserId());
+        
 
         return savedStudent;
     }
