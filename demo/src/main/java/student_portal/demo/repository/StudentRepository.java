@@ -6,12 +6,10 @@ import student_portal.demo.entity.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Integer> {
 
-    long countByBranch(String branch);
+    Student findByEmailAndPassword(String email, String password);
 
     Student findByUserId(String userId);
 
-    Student findByUserIdAndPassword(String userId, String password);
-
-    Student findByUserIdAndEmail(String userId, String email);
+    long countByBranch(String branch);
 }
 

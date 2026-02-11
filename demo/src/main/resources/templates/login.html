@@ -8,11 +8,13 @@
 <h2>Student Login</h2>
 
 <form action="/login" method="post">
-    User ID:
-    <input type="text" name="userId" required><br><br>
+
+    Email:
+    <input type="email" name="email" required><br><br>
 
     Password:
     <input type="password" name="password" required><br><br>
+
 
     <button type="submit">Login</button>
 </form>
@@ -21,7 +23,6 @@
 <p style="color:green;">[[${msg}]]</p>
 
 <a href="/register">New User? Register</a><br>
-<a href="/forgot-password">Forgot Password?</a><br>
 <a href="/admin">Admin Login</a>
 
 </body>

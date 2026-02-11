@@ -71,27 +71,28 @@ public class AuthController {
         }
 
         studentService.register(student);
-        model.addAttribute("msg", "Registration successful. Check email for User ID.");
+
         return "login";
     }
 
     @PostMapping("/login")
     public String loginStudent(
-            @RequestParam String userId,
+            @RequestParam String email,
             @RequestParam String password,
             HttpSession session,
             Model model) {
 
-        Student student = studentRepo.findByUserIdAndPassword(userId, password);
+        Student student = studentRepo.findByEmailAndPassword(email, password);
 
         if (student == null) {
-            model.addAttribute("error", "Invalid User ID or Password");
+            model.addAttribute("error", "Invalid Email or Password");
             return "login";
         }
 
         session.setAttribute("student", student);
         return "redirect:/dashboard";
     }
+
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
@@ -300,53 +301,9 @@ public ResponseEntity<byte[]> viewResume(@PathVariable int studentId) throws IOE
 
     // ================== FORGOT PASSWORD ==================
 
-    @GetMapping("/forgot-password")
-    public String forgotPasswordPage() {
-        return "forgot-password";
-    }
 
-    @PostMapping("/send-otp")
-    public String sendOtp(@RequestParam String userId,
-                          @RequestParam String email,
-                          HttpSession session,
-                          Model model) {
 
-        Student student = studentRepo.findByUserIdAndEmail(userId, email);
-        if (student == null) {
-            model.addAttribute("error", "Invalid User ID or Email");
-            return "forgot-password";
-        }
 
-        int otp = studentService.generateOtp();
-        studentService.sendOtp(email, otp);
-
-        session.setAttribute("otp", otp);
-        session.setAttribute("student", student);
-
-        return "reset-password";
-    }
-
-    @PostMapping("/reset-password")
-    public String resetPassword(@RequestParam int otp,
-                                @RequestParam String newPassword,
-                                HttpSession session,
-                                Model model) {
-
-        int sessionOtp = (int) session.getAttribute("otp");
-        Student student = (Student) session.getAttribute("student");
-
-        if (otp != sessionOtp) {
-            model.addAttribute("error", "Invalid OTP");
-            return "reset-password";
-        }
-
-        student.setPassword(newPassword);
-        studentRepo.save(student);
-        session.invalidate();
-
-        model.addAttribute("msg", "Password updated successfully");
-        return "login";
-    }
 
     // ================== ADMIN ==================
 
