@@ -28,7 +28,7 @@ public class StudentService {
         student.setUserId(userId);
 
         Student savedStudent = studentRepo.save(student);
-        
+
 
         return savedStudent;
     }
