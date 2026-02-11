@@ -195,7 +195,8 @@ public class AuthController {
 
         Student student = (Student) session.getAttribute("student");
 
-        String uploadDir = "C:/Users/Abhinaya/Downloads/demo (10)/demo/uploads/student-certificates/";
+        String uploadDir = "uploads/student-certificates/";
+Files.createDirectories(Paths.get(uploadDir));   // create folder if not exists
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path path = Paths.get(uploadDir + fileName);
         Files.write(path, file.getBytes());
@@ -217,8 +218,8 @@ public class AuthController {
             return ResponseEntity.notFound().build();
         }
 
-        String basePath = "C:/Users/Abhinaya/Downloads/demo (10)/demo/uploads/student-certificates/";
-        Path fullPath = Paths.get(basePath + cert.getPdfPath());
+        Path fullPath = Paths.get("uploads/student-certificates/" + cert.getPdfPath());
+
 
         if (!Files.exists(fullPath)) {
             return ResponseEntity.notFound().build();
@@ -242,60 +243,59 @@ public class AuthController {
     }
 
     @PostMapping("/save-resume")
-    public String saveResume(
-            @RequestParam("resumeFile") MultipartFile file,
-            HttpSession session) throws IOException {
+public String saveResume(
+        @RequestParam("resumeFile") MultipartFile file,
+        HttpSession session) throws IOException {
 
-        Student student = (Student) session.getAttribute("student");
+    Student student = (Student) session.getAttribute("student");
 
-        String uploadDir = "C:/Users/Abhinaya/Downloads/demo (10)/demo/uploads/student-resumes/";
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path path = Paths.get(uploadDir + fileName);
-        Files.write(path, file.getBytes());
+    if (student == null) return "redirect:/";
 
-        Resume resume = resumeRepo.findByStudent(student);
-        if (resume == null) {
-            resume = new Resume();
-            resume.setStudent(student);
-        }
+    String uploadDir = "uploads/student-resumes/";
+    Files.createDirectories(Paths.get(uploadDir));   // create folder if not exists
 
-        resume.setFileName(fileName);
-        resume.setUploadedDate(LocalDate.now());
-        resumeRepo.save(resume);
+    String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+    Path path = Paths.get(uploadDir + fileName);
 
-        return "redirect:/dashboard";
+    Files.write(path, file.getBytes());
+
+    Resume resume = resumeRepo.findByStudent(student);
+    if (resume == null) {
+        resume = new Resume();
+        resume.setStudent(student);
     }
+
+    resume.setFileName(fileName);
+    resume.setUploadedDate(LocalDate.now());
+    resumeRepo.save(resume);
+
+    return "redirect:/dashboard";
+}
 
     @GetMapping("/resume/{studentId}")
-    public ResponseEntity<byte[]> viewResume(@PathVariable int studentId) throws IOException {
+public ResponseEntity<byte[]> viewResume(@PathVariable int studentId) throws IOException {
 
-        Student student = studentRepo.findById(studentId).orElse(null);
+    Student student = studentRepo.findById(studentId).orElse(null);
+    if (student == null) return ResponseEntity.notFound().build();
 
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
+    Resume resume = resumeRepo.findByStudent(student);
+    if (resume == null) return ResponseEntity.notFound().build();
 
-        Resume resume = resumeRepo.findByStudent(student);
+    Path fullPath = Paths.get("uploads/student-resumes/" + resume.getFileName());
 
-        if (resume == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        String basePath = "C:/Users/Abhinaya/Downloads/demo (10)/demo/uploads/student-resumes/";
-        Path fullPath = Paths.get(basePath + resume.getFileName());
-
-        if (!Files.exists(fullPath)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        byte[] fileBytes = Files.readAllBytes(fullPath);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "inline; filename=\"" + fullPath.getFileName().toString() + "\"")
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(fileBytes);
+    if (!Files.exists(fullPath)) {
+        return ResponseEntity.notFound().build();
     }
+
+    byte[] fileBytes = Files.readAllBytes(fullPath);
+
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                    "inline; filename=\"" + fullPath.getFileName().toString() + "\"")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(fileBytes);
+}
+
 
 
     // ================== FORGOT PASSWORD ==================
