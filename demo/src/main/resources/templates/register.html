@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration</title>
+</head>
+<body>
+
+<h2>Register</h2>
+
+<form action="/register" method="post" th:object="${student}">
+
+    Name:
+    <input type="text" th:field="*{name}">
+    <span style="color:red" th:errors="*{name}"></span><br><br>
+
+    Email:
+    <input type="email" th:field="*{email}">
+    <span style="color:red" th:errors="*{email}"></span><br><br>
+
+    Mobile:
+    <input type="text" th:field="*{mobile}">
+    <span style="color:red" th:errors="*{mobile}"></span><br><br>
+
+    Branch:
+    <select th:field="*{branch}">
+        <option value="">Select</option>
+        <option value="CSE">CSE</option>
+        <option value="ECE">ECE</option>
+        <option value="EEE">EEE</option>
+        <option value="MECH">MECH</option>
+    </select>
+    <span style="color:red" th:errors="*{branch}"></span><br><br>
+
+    Password:
+    <input type="password" th:field="*{password}">
+    <span style="color:red" th:errors="*{password}"></span><br><br>
+
+    <button type="submit">Register</button>
+</form>
+
+</body>
+</html>

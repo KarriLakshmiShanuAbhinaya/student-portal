@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Certification</title>
+</head>
+<body>
+
+<h2>Add Certification</h2>
+
+<form action="/save-certification" method="post" enctype="multipart/form-data">
+
+    Certification Name:
+    <input type="text" name="certificationName" required><br><br>
+
+    Certification ID:
+    <input type="text" name="certificationId" required><br><br>
+
+    Organization:
+    <input type="text" name="organization" required><br><br>
+
+    Certificate PDF:
+    <input type="file" name="pdfFile" accept="application/pdf" required><br><br>
+
+    <button>Save</button>
+</form>
+
+</body>
+</html>

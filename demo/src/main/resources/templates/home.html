@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Profile</title>
+</head>
+<body>
+
+<h2>[[${student.name}]]</h2>
+<p>User ID: [[${student.userId}]]</p>
+<p>Branch: [[${student.branch}]]</p>
+<p>Email: [[${student.email}]]</p>
+
+<hr>
+
+<h3>Skills</h3>
+<ul>
+    <li th:each="s : ${skills}">[[${s.skillName}]]</li>
+</ul>
+
+<hr>
+
+<h3>Projects</h3>
+<div th:each="p : ${projects}">
+    <b>[[${p.projectName}]]</b><br>
+    Tech: [[${p.technologies}]]<br>
+    <a th:href="@{/project/{id}(id=${p.id})}">Know More</a>
+    <hr>
+</div>
+
+<hr>
+
+<h3>Certifications</h3>
+<div th:each="c : ${certifications}">
+    [[${c.certificationName}]] - [[${c.organization}]]<br>
+    <a th:href="@{/certification/pdf/{id}(id=${c.id})}" target="_blank">View</a>
+    <hr>
+</div>
+
+<hr>
+
+<h3>Resume</h3>
+<div th:if="${resume != null}">
+    <a th:href="@{/resume/{id}(id=${student.id})}" target="_blank">Download Resume</a>
+</div>
+
+</body>
+</html>

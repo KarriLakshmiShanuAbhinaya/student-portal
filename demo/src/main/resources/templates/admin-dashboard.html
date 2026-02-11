@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<table border="1">
+    <tr>
+        <th>User ID</th>
+        <th>Name</th>
+        <th>Branch</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="s : ${students}">
+        <td>[[${s.userId}]]</td>
+        <td>[[${s.name}]]</td>
+        <td>[[${s.branch}]]</td>
+        <td>
+            <a th:href="@{/admin/student/{id}(id=${s.id})}">
+                View
+            </a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
